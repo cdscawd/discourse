@@ -1,5 +1,6 @@
 <table class='flagged-topics'>
   <thead>
+    {{plugin-outlet name="flagged-topic-header-row" tagName=""}}
     <th>Topic</th>
     <th>Type</th>
     <th>Flagged By</th>
@@ -9,6 +10,8 @@
 
   {{#each model as |ft|}}
     <tr class='flagged-topic'>
+      {{plugin-outlet name="flagged-topic-row" tagName=""}}
+
       <td class="topic-title">
         <a href={{ft.topic.relative_url}} target="_blank">{{ft.topic.fancy_title}}</a>
       </td>
