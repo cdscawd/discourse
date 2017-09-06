@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module FlagQuery
 
   def self.flagged_posts_report(current_user, filter, offset = 0, per_page = 25)
@@ -126,6 +128,39 @@ module FlagQuery
         .where("topics.deleted_at" => nil)
     end
 
+  end
+
+  def self.flagged_topics
+
+    results = PostAction
+      .flags
+      .active
+      .includes(post: :topic)
+      .includes(:user)
+      .order('post_actions.created_at DESC')
+
+    ft_by_id = {}
+    users_by_id = {}
+    results.each do |pa|
+      if pa.post.present? && pa.post.topic.present?
+        ft = ft_by_id[pa.post.topic.id] ||= OpenStruct.new(
+          topic: pa.post.topic,
+          flag_counts: {},
+          user_ids: [],
+          last_flag_at: pa.created_at
+        )
+
+        ft.flag_counts[pa.post_action_type_id] ||= 0
+        ft.flag_counts[pa.post_action_type_id] += 1
+
+        ft.user_ids << pa.post.user_id
+        ft.user_ids.uniq!
+
+        users_by_id[pa.post.user_id] ||= pa.post.user
+      end
+    end
+
+    { flagged_topics: ft_by_id.values, users: users_by_id.values }
   end
 
   private

@@ -1,0 +1,33 @@
+<table class='flagged-topics'>
+  <thead>
+    <th>Topic</th>
+    <th>Type</th>
+    <th>Flagged By</th>
+    <th>Last Flagged</th>
+    <th></th>
+  </thead>
+
+  {{#each model as |ft|}}
+    <tr class='flagged-topic'>
+      <td class="topic-title">
+        <a href={{ft.topic.relative_url}} target="_blank">{{ft.topic.fancy_title}}</a>
+      </td>
+      <td>
+        {{#each ft.flag_counts as |fc|}}
+          {{flag-counts details=fc}}
+        {{/each}}
+      </td>
+      <td>
+        {{flagged-topic-users users=ft.users tagName=""}}
+      </td>
+      <td>
+        {{format-age ft.last_flag_at}}
+      </td>
+      <td>
+        <a class='d-button' title={{i18n "admin.flags.show_details"}}>
+          {{d-icon "search"}}
+        </a>
+      </td>
+    </tr>
+  {{/each}}
+</table>

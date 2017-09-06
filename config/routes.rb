@@ -192,7 +192,9 @@ Discourse::Application.routes.draw do
     post "flags/disagree/:id" => "flags#disagree"
     post "flags/defer/:id" => "flags#defer"
 
+    resources :flagged_topics, constraints: AdminConstraint.new
     resources :themes, constraints: AdminConstraint.new
+
     post "themes/import" => "themes#import"
     post "themes/upload_asset" => "themes#upload_asset"
     get "themes/:id/preview" => "themes#preview"
