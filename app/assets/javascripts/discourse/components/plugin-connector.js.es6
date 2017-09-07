@@ -25,6 +25,13 @@ export default Ember.Component.extend({
     const connectorClass = this.get('connector.connectorClass');
     const action = connectorClass.actions[name];
     return action ? action.call(this, ...args) : this._super(name, ...args);
+  },
+
+  actionFor(actionName) {
+    const connectorClass = this.get('connector.connectorClass');
+    if (connectorClass && connectorClass.actions) {
+      return connectorClass.actions[actionName];
+    }
   }
 
 });
